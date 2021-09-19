@@ -12,6 +12,7 @@ import {
 } from 'semantic-ui-react';
 
 // services
+import { getKeyValue } from 'eslint-plugin-react/lib/util/ast';
 import api from '../../services/api';
 
 // styles
@@ -31,6 +32,7 @@ const Dashboard = () => {
         setAlunos(response.data);
         const resp = await api.get('/cursos');
         setCursos(resp.data);
+        console.log(resp.data);
       } catch {
         alert('Confira a api');
       }
@@ -60,13 +62,26 @@ const Dashboard = () => {
       </Modal.Actions>
     </Modal>
   );
+  // const curso_option = [{ key: 'aaaaa', value: 'bbbb', text: 'ta complexo' }];
+
+  const curso_option = cursos.map(x => ({
+    key: x.id,
+    value: x.id,
+    text: x.nome,
+  }));
+
   const render_modal_info_cursos = () => (
     <Modal open={modalCursos} onClose={() => setModalCursos(false)} closeIcon>
       <Header content={`Adcionando curso para : ${currentInfo.nome}`} />
       <Modal.Content>
         <Form>
           <Form.Group widths="equal">
-            <Form.Select fluid label="Curso" placeholder="Curso" />
+            <Form.Select
+              fluid
+              label="Curso"
+              placeholder="Curso"
+              options={curso_option}
+            />
           </Form.Group>
         </Form>
       </Modal.Content>
@@ -80,7 +95,6 @@ const Dashboard = () => {
       </Modal.Actions>
     </Modal>
   );
-
   function open_info_alunos(data_aluno) {
     console.log(data_aluno);
     setCurrentInfo(data_aluno);
@@ -103,7 +117,13 @@ const Dashboard = () => {
           basic
         />
         <Popup
-          trigger={<Button icon="plus" onClick={() => open_curso(data_aluno)} positive />}
+          trigger={(
+            <Button
+              icon="plus"
+              onClick={() => open_curso(data_aluno)}
+              positive
+            />
+          )}
           content="Adicionar curso para aluno"
           basic
         />
@@ -127,7 +147,20 @@ const Dashboard = () => {
       </Table.Row>
     ));
   }
-
+  /* function render_cursos() {
+    return cursos.map(x => (
+      <Form>
+        <Form.Group widths="equal">
+          <Form.Select
+            fluid
+            label="Curso"
+            placeholder="Curso"
+            options={x.nome}
+          />
+        </Form.Group>
+      </Form>
+    ));
+  } */
   return (
     <Container>
       <InitialText>Administrador de alunos</InitialText>
