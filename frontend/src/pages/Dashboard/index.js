@@ -24,6 +24,8 @@ const Dashboard = () => {
   const [modalInfos, setModalInfos] = useState(false);
   const [cursos, setCursos] = useState([]);
   const [modalCursos, setModalCursos] = useState(false);
+  const [alunoCurso, setAlunoCurso] = useState([]);
+  const [currentCurso, setCurrentCurso] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -32,13 +34,33 @@ const Dashboard = () => {
         setAlunos(response.data);
         const resp = await api.get('/cursos');
         setCursos(resp.data);
-        console.log(resp.data);
       } catch {
         alert('Confira a api');
       }
     }
     fetchData();
   }, []);
+
+  function setCursoAluno(idAluno) {
+    async function fetchData() {
+      try {
+        console.log('currentCurso >>>> ', currentCurso);
+        const response = await api.post('/cursoAluno', {
+          id_aluno: idAluno,
+          id_curso: currentCurso,
+        });
+        console.log('response >>>> ', response);
+        if (response.data) {
+          alert('Adicionado com sucesso!');
+        } else {
+          alert('Não foi possível adicionar o curso');
+        }
+      } catch {
+        alert('Não foi possível  adicionado o curso');
+      }
+    }
+    fetchData();
+  }
 
   const render_modal_info_alunos = () => (
     <Modal open={modalInfos} onClose={() => setModalInfos(false)} closeIcon>
@@ -62,13 +84,17 @@ const Dashboard = () => {
       </Modal.Actions>
     </Modal>
   );
-  // const curso_option = [{ key: 'aaaaa', value: 'bbbb', text: 'ta complexo' }];
 
   const curso_option = cursos.map(x => ({
     key: x.id,
     value: x.id,
     text: x.nome,
   }));
+
+  function setCurso(curso) {
+    console.log(' curso >>>>', curso);
+    setCurrentCurso(curso);
+  }
 
   const render_modal_info_cursos = () => (
     <Modal open={modalCursos} onClose={() => setModalCursos(false)} closeIcon>
@@ -81,6 +107,8 @@ const Dashboard = () => {
               label="Curso"
               placeholder="Curso"
               options={curso_option}
+              value={currentCurso}
+              onChange={(e, { value }) => setCurso(value)}
             />
           </Form.Group>
         </Form>
@@ -89,7 +117,7 @@ const Dashboard = () => {
         <Button onClick={() => setModalCursos(false)} color="red">
           <Icon name="remove" />
         </Button>
-        <Button onClick={() => setModalCursos(false)} color="green">
+        <Button onClick={() => setCursoAluno(currentInfo.id)} color="green">
           <Icon name="checkmark" />
         </Button>
       </Modal.Actions>
