@@ -7,15 +7,18 @@ class AlunoController {
   }
 
   async read(req, res) {
-
+    // TODO
   }
 
   async create(req, res) {
-
+    // TODO
   }
 
   async update(req, res) {
-    // TODO
+    const alunoUpdate = await Aluno.update(req.body, {
+      where: { id: req.body.id }
+    });
+    res.json(alunoUpdate);
   }
 
   async delete(req, res) {
