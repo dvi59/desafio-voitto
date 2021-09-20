@@ -68,6 +68,32 @@ const Dashboard = () => {
       } catch {
         alert('Não foi possível cadastrar o aluno');
       }
+      setModalAlunos(false);
+    }
+    fetchData();
+  }
+  function updAluno(idAluno) {
+    async function fetchData() {
+      try {
+        console.log(" newAlunos => ", newAlunos)
+        const response = await api.put('/alunosUpdate', {
+          id: idAluno,
+          nome: newAlunos.nome,
+          email: newAlunos.email,
+          cep: newAlunos.cep,
+          cidade: cepInfos.localidade,
+          estado: cepInfos.uf,
+        });
+        console.log('Response>>>', response);
+        if (response.data) {
+          alert('Aluno cadastrado com sucesso');
+        } else {
+          alert('Não foi possível cadastrar o aluno');
+        }
+      } catch {
+        alert('Não foi possível cadastrar o aluno');
+      }
+      setModalInfos(false);
     }
     fetchData();
   }
@@ -83,11 +109,12 @@ const Dashboard = () => {
         if (response.data) {
           alert('Usuário removido com sucesso');
         } else {
-          alert('Não foi possível cadastrar o aluno');
+          alert('Não foi possível remover o aluno');
         }
       }catch{
-          alert('Não foi possível cadastrar o aluno');
+          alert('Não foi possível remover o aluno');
       }
+      setModalDeleteAlunos(false);
     }
     fetchData();
   }
@@ -109,6 +136,7 @@ const Dashboard = () => {
       } catch {
         alert('Não foi possível  adicionado o curso');
       }
+      setModalCursos(false);
     }
     fetchData();
   }
@@ -119,9 +147,9 @@ const Dashboard = () => {
       <Modal.Content>
         <Form>
           <Form.Group widths="equal">
-            <Form.Input fluid label="Nome" placeholder="Nome"/>
-            <Form.Input fluid label="Email" placeholder="Email" />
-            <Form.Input fluid label="CEP" placeholder="CEP" />
+            <Form.Input fluid label="Nome" placeholder="Nome"  onChange={e =>newAlunos.nome=e.target.value}/>
+            <Form.Input fluid label="Email" placeholder="Email" onChange={e =>newAlunos.email=e.target.value}/>
+            <Form.Input fluid label="CEP" placeholder="CEP" value={cep}  onChange={e => atribuirCep(e.target.value)}/>
           </Form.Group>
         </Form>
       </Modal.Content>
@@ -129,7 +157,7 @@ const Dashboard = () => {
         <Button onClick={() => setModalInfos(false)} color="red">
           <Icon name="remove" />
         </Button>
-        <Button onClick={() => setModalInfos(false)} color="green">
+        <Button onClick={() => updAluno(currentInfo.id)} color="green">
           <Icon name="checkmark" />
         </Button>
       </Modal.Actions>
