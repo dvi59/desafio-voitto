@@ -6,12 +6,8 @@ class AlunoController {
     res.json(alunos);
   }
 
-  async read(req, res) {
-    // TODO
-  }
-
   async create(req, res) {
-    console.log(" req.body => ", req.body)
+    //console.log(" req.body => ", req.body)
     const alunoCreate = await Aluno.create(req.body);
     res.json(alunoCreate);
   }

@@ -56,7 +56,7 @@ const Dashboard = () => {
   function createAluno() {
     async function fetchData() {
       try {
-        console.log(" newAlunos => ", newAlunos)
+       //console.log(" newAlunos => ", newAlunos)
         const response = await api.post('/alunosCriar', {
           nome: newAlunos.nome,
           email: newAlunos.email,
@@ -64,7 +64,7 @@ const Dashboard = () => {
           cidade: cepInfos.localidade,
           estado: cepInfos.uf,
         });
-        console.log('Response>>>', response);
+        //console.log('Response>>>', response);
         if (response.data) {
           alert('Aluno cadastrado com sucesso');
         } else {
@@ -81,7 +81,7 @@ const Dashboard = () => {
   function updAluno(idAluno) {
     async function fetchData() {
       try {
-        console.log(" newAlunos => ", newAlunos)
+       // console.log(" newAlunos => ", newAlunos)
         const response = await api.put('/alunosUpdate', {
           id: idAluno,
           nome: newAlunos.nome,
@@ -90,7 +90,7 @@ const Dashboard = () => {
           cidade: cepInfos.localidade,
           estado: cepInfos.uf,
         });
-        console.log('Response>>>', response);
+        //console.log('Response>>>', response);
         if (response.data) {
           alert('Aluno cadastrado com sucesso');
         } else {
@@ -108,11 +108,11 @@ const Dashboard = () => {
   function deleteAluno(idAluno){
     async function fetchData(){
       try {
-        console.log('Aluno >>>>>', currentInfo);
+        //console.log('Aluno >>>>>', currentInfo);
         const response = await api.delete('/alunosDeletar', {data:{
           id: idAluno,
         }});
-        console.log('Response >>>>>>>>', response);
+        //console.log('Response >>>>>>>>', response);
         if (response.data) {
           alert('Usuário removido com sucesso');
         } else {
@@ -130,12 +130,12 @@ const Dashboard = () => {
   function setCursoAluno(idAluno) {
     async function fetchData() {
       try {
-        console.log('currentCurso >>>> ', currentCurso);
+        //console.log('currentCurso >>>> ', currentCurso);
         const response = await api.post('/cursoAtribuir', {
           id_aluno: idAluno,
           id_curso: currentCurso,
         });
-        console.log('response >>>> ', response);
+        //console.log('response >>>> ', response);
         if (response.data) {
           alert('Adicionado com sucesso!');
         } else {
@@ -156,9 +156,9 @@ const Dashboard = () => {
       <Modal.Content>
         <Form>
           <Form.Group widths="equal">
-            <Form.Input fluid label="Nome" placeholder="Nome"  onChange={e =>newAlunos.nome=e.target.value}/>
-            <Form.Input fluid label="Email" placeholder="Email" onChange={e =>newAlunos.email=e.target.value}/>
-            <Form.Input fluid label="CEP" placeholder="CEP" value={cep}  onChange={e => atribuirCep(e.target.value)}/>
+            <Form.Input fluid label="Nome" placeholder="Nome" value={currentInfo.nome} onChange={e =>newAlunos.nome=e.target.value}/>
+            <Form.Input fluid label="Email" placeholder="Email" value={currentInfo.email} onChange={e =>newAlunos.email=e.target.value}/>
+            <Form.Input fluid label="CEP" placeholder="CEP" value={currentInfo.cep}  onChange={e => atribuirCep(e.target.value)}/>
           </Form.Group>
         </Form>
       </Modal.Content>
@@ -177,20 +177,20 @@ const Dashboard = () => {
     type: 'json'
   })
   async function pCep(cepx) {
-    console.log("cep >>>> ", cepx);
+    //console.log("cep >>>> ", cepx);
     await viacep.zipCod.getZip(cepx).then(data => data.text())
       .then(data => {
         const cepInfos = JSON.parse(data);
         setCepInfos(cepInfos)
-        console.log("cepInfos cidade >>>> ", cepInfos);
+        //console.log("cepInfos cidade >>>> ", cepInfos);
       });
 
   }
 
   function atribuirCep(cepx){
     setCep(cepx);
-    console.log("cep => ", cep);
-    console.log("cepx => ", cepx);
+    //console.log("cep => ", cep);
+    //console.log("cepx => ", cepx);
     if(cepx.length == 8){
       pCep(cepx);
       newAlunos.cep = cepx;
@@ -205,7 +205,7 @@ const Dashboard = () => {
           <Form.Group widths="equal">
             <Form.Input fluid label="Nome" placeholder="Nome"  onChange={e =>newAlunos.nome=e.target.value}/>
             <Form.Input fluid label="Email" placeholder="Email" onChange={e =>newAlunos.email=e.target.value}/>
-            <Form.Input fluid label="CEP" placeholder="CEP" value={cep}  onChange={e => atribuirCep(e.target.value)}/>
+            <Form.Input fluid label="CEP" placeholder="CEP"  onChange={e => atribuirCep(e.target.value)}/>
           </Form.Group>
         </Form>
       </Modal.Content>
@@ -227,12 +227,11 @@ const Dashboard = () => {
   }));
 
   function setCurso(curso) {
-    console.log(' curso >>>>', curso);
+    //console.log(' curso >>>>', curso);
     setCurrentCurso(curso);
   }
   function atribuirAlu(aluno){
-    console.log('aluno', aluno)
-    //setNewAlunos(aluno);
+    //console.log('aluno', aluno)
     createAluno(aluno);
   }
 
@@ -287,17 +286,17 @@ const Dashboard = () => {
     </Modal>
   );
   function open_info_alunos(data_aluno) {
-    console.log(data_aluno);
+    //console.log(data_aluno);
     setCurrentInfo(data_aluno);
     setModalInfos(true);
   }
   function open_curso(data_aluno) {
-    console.log(data_aluno);
+    //console.log(data_aluno);
     setCurrentInfo(data_aluno);
     setModalCursos(true);
   }
   function open_delete_alunos(data_aluno){
-    console.log(data_aluno);
+    //console.log(data_aluno);
     setCurrentInfo(data_aluno);
     setModalDeleteAlunos(true);
   }

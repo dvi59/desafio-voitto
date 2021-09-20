@@ -1,5 +1,3 @@
-import Aluno from '../../models/Aluno';
-import Curso from '../../models/Curso';
 import CursoAluno from '../../models/CursoAluno';
 
 class AtribuirCursoAlunoService {
@@ -8,7 +6,7 @@ class AtribuirCursoAlunoService {
       id_pessoa: id_aluno,
       id_curso: id_curso
     });
-    console.log(atribuir);
+    //console.log(atribuir);
     return true;
   }
 }

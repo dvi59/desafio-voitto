@@ -1,10 +1,6 @@
 import CursoAluno from '../models/CursoAluno';
 
 class AlunoCursoController {
-  async index(req, res) {
-    const cursoAluno = await CursoAluno.findAll();
-    res.json(cursoAluno);
-  }
 
   async create(req, res) {
     const resposta = await CursoAluno.create({
