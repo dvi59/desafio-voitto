@@ -13,8 +13,6 @@ import {
 } from 'semantic-ui-react';
 
 // services
-import { getKeyValue } from 'eslint-plugin-react/lib/util/ast';
-import * as assert from 'assert';
 import api from '../../services/api';
 
 // styles
@@ -28,11 +26,9 @@ const Dashboard = () => {
   const [cursos, setCursos] = useState([]);
   const [modalCursos, setModalCursos] = useState(false);
   const [currentCurso, setCurrentCurso] = useState([]);
-  const [newAlunos, setNewAlunos] = useState({});
-  const [cep,setCep] = useState("");
+  const [newAlunos] = useState({});
   const [cepInfos,setCepInfos] = useState({});
   const [modalDeleteAlunos, setModalDeleteAlunos] = useState(false);
-
 
   useEffect(() => {
   readData();
@@ -150,15 +146,17 @@ const Dashboard = () => {
     fetchData();
   }
 
+
+
   const render_modal_info_alunos = () => (
     <Modal open={modalInfos} onClose={() => setModalInfos(false)} closeIcon>
       <Header content={`Editando informações de ${currentInfo.nome}`} />
       <Modal.Content>
         <Form>
           <Form.Group widths="equal">
-            <Form.Input fluid label="Nome" placeholder="Nome" value={currentInfo.nome} onChange={e =>newAlunos.nome=e.target.value}/>
-            <Form.Input fluid label="Email" placeholder="Email" value={currentInfo.email} onChange={e =>newAlunos.email=e.target.value}/>
-            <Form.Input fluid label="CEP" placeholder="CEP" value={currentInfo.cep}  onChange={e => atribuirCep(e.target.value)}/>
+            <Form.Input fluid label="Nome" placeholder="Nome" onChange={e =>newAlunos.nome=e.target.value}/>
+            <Form.Input fluid label="Email" placeholder="Email" onChange={e =>newAlunos.email=e.target.value}/>
+            <Form.Input fluid label="CEP" placeholder="CEP" onChange={e => atribuirCep(e.target.value)}/>
           </Form.Group>
         </Form>
       </Modal.Content>
@@ -188,10 +186,9 @@ const Dashboard = () => {
   }
 
   function atribuirCep(cepx){
-    setCep(cepx);
     //console.log("cep => ", cep);
     //console.log("cepx => ", cepx);
-    if(cepx.length == 8){
+    if(cepx.length === 8){
       pCep(cepx);
       newAlunos.cep = cepx;
     }
