@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import ViaCep from 'node-viacep';
 // components
 import {
   Table,
