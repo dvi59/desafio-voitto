@@ -34,7 +34,6 @@ const Dashboard = () => {
   const [modalDeleteAlunos, setModalDeleteAlunos] = useState(false);
 
 
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -68,6 +67,26 @@ const Dashboard = () => {
         }
       } catch {
         alert('Não foi possível cadastrar o aluno');
+      }
+    }
+    fetchData();
+  }
+
+  function deleteAluno(idAluno){
+    async function fetchData(){
+      try {
+        console.log('Aluno >>>>>', currentInfo);
+        const response = await api.delete('/alunosDeletar', {data:{
+          id: idAluno,
+        }});
+        console.log('Response >>>>>>>>', response);
+        if (response.data) {
+          alert('Usuário removido com sucesso');
+        } else {
+          alert('Não foi possível cadastrar o aluno');
+        }
+      }catch{
+          alert('Não foi possível cadastrar o aluno');
       }
     }
     fetchData();
@@ -208,27 +227,23 @@ const Dashboard = () => {
     </Modal>
   );
   const render_modal_remove_alunos = () => (
-    <Modal open={modalCursos} onClose={() => setModalCursos(false)} closeIcon>
-      <Header content={`Adcionando curso para : ${currentInfo.nome}`} />
+    <Modal open={modalDeleteAlunos} onClose={() => setModalDeleteAlunos(false)} closeIcon>
+      <Header content={`Removendo o aluno ${currentInfo.nome}`} />
       <Modal.Content>
         <Form>
           <Form.Group widths="equal">
-            <Form.Select
-              fluid
-              label="Curso"
-              placeholder="Curso"
-              options={curso_option}
-              value={currentCurso}
-              onChange={(e, { value }) => setCurso(value)}
-            />
+            <Header as='h4' textAlign='center'>
+              Deseja mesmo executar esta ação?
+              <p>Esta alteração não poderá ser desfeita!</p>
+            </Header>
           </Form.Group>
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button onClick={() => setModalCursos(false)} color="red">
+        <Button onClick={() => setModalDeleteAlunos(false)} color="red">
           <Icon name="remove" />
         </Button>
-        <Button onClick={() => setCursoAluno(currentInfo.id)} color="green">
+        <Button onClick={() =>deleteAluno(currentInfo.id)} color="green">
           <Icon name="checkmark" />
         </Button>
       </Modal.Actions>
@@ -243,6 +258,11 @@ const Dashboard = () => {
     console.log(data_aluno);
     setCurrentInfo(data_aluno);
     setModalCursos(true);
+  }
+  function open_delete_alunos(data_aluno){
+    console.log(data_aluno);
+    setCurrentInfo(data_aluno);
+    setModalDeleteAlunos(true);
   }
 
   function render_actions(data_aluno) {
@@ -267,7 +287,7 @@ const Dashboard = () => {
           basic
         />
         <Popup
-          trigger={<Button icon="close" negative />}
+          trigger={<Button icon="close" negative onClick={()=>open_delete_alunos(data_aluno)}/>}
           content="Excluir aluno"
           basic
         />
@@ -310,6 +330,7 @@ const Dashboard = () => {
       {render_modal_info_alunos()}
       {render_modal_info_cursos()}
       {render_modal_add_alunos()}
+      {render_modal_remove_alunos()}
       <Button primary onClick={() => setModalAlunos(true)}>Adicionar aluno</Button>
       <Button href="/" secondary>
         Ver instruções

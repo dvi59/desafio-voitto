@@ -24,7 +24,10 @@ class AlunoController {
   }
 
   async delete(req, res) {
-    // TODO
+    const alunoDelete = await Aluno.destroy({
+      where: { id: req.body.id }
+    });
+    res.json(alunoDelete);
   }
 }
 
