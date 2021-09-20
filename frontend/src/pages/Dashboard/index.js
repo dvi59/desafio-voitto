@@ -35,6 +35,10 @@ const Dashboard = () => {
 
 
   useEffect(() => {
+  readData();
+  }, []);
+
+  function readData(){
     async function fetchData() {
       try {
         const response = await api.get('/alunos');
@@ -46,7 +50,8 @@ const Dashboard = () => {
       }
     }
     fetchData();
-  }, []);
+  }
+
 
   function createAluno() {
     async function fetchData() {
@@ -69,6 +74,7 @@ const Dashboard = () => {
         alert('Não foi possível cadastrar o aluno');
       }
       setModalAlunos(false);
+      readData();
     }
     fetchData();
   }
@@ -94,6 +100,7 @@ const Dashboard = () => {
         alert('Não foi possível cadastrar o aluno');
       }
       setModalInfos(false);
+      readData();
     }
     fetchData();
   }
@@ -115,6 +122,7 @@ const Dashboard = () => {
           alert('Não foi possível remover o aluno');
       }
       setModalDeleteAlunos(false);
+      readData();
     }
     fetchData();
   }
@@ -137,6 +145,7 @@ const Dashboard = () => {
         alert('Não foi possível  adicionado o curso');
       }
       setModalCursos(false);
+      readData();
     }
     fetchData();
   }
