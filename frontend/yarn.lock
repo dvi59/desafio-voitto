@@ -7308,6 +7308,11 @@ no-case@^3.0.3:
     lower-case "^2.0.1"
     tslib "^1.10.0"
 
+node-fetch@^2.1.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.2.tgz#986996818b73785e47b1965cc34eb093a1d464d0"
+  integrity sha512-aLoxToI6RfZ+0NOjmWAgn9+LEd30YCkJKFSyWacNZdEKTit/ZMcKjGkTRo8uWEsnIb/hfKecNPEbln02PdWbcA==
+
 node-forge@0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.9.0.tgz#d624050edbb44874adca12bb9a52ec63cb782579"
@@ -7367,6 +7372,13 @@ node-releases@^1.1.52, node-releases@^1.1.58:
   version "1.1.59"
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.1.59.tgz#4d648330641cec704bff10f8e4fe28e453ab8e8e"
   integrity sha512-H3JrdUczbdiwxN5FuJPyCHnGHIFqQ0wWxo+9j1kAXAzqNMAHlo+4I/sYYxpyK0irQ73HgdiyzD32oqQDcU2Osw==
+
+node-viacep@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/node-viacep/-/node-viacep-1.1.0.tgz#dcdaf6722804c45bfd25ca3377b38225ab3992d5"
+  integrity sha512-3wWjsEYwBeOqB8g90EeBwDBUaqe7l1dINMOOyxT7GLWUTZ/ubMQKmgCP2jwKys/q/IS04DZE+qVVhVLW7aH3YA==
+  dependencies:
+    node-fetch "^2.1.2"
 
 normalize-package-data@^2.3.2:
   version "2.5.0"

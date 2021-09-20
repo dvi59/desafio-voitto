@@ -11,7 +11,9 @@ class AlunoController {
   }
 
   async create(req, res) {
-    // TODO
+    console.log(" req.body => ", req.body)
+    const alunoCreate = await Aluno.create(req.body);
+    res.json(alunoCreate);
   }
 
   async update(req, res) {

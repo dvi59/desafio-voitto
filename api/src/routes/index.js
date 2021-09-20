@@ -10,7 +10,7 @@ const routes = new Router();
 
 routes.get('/alunos', AlunosController.index);
 routes.get('/cursos', CursoController.index);
-routes.get('/alunoCurso', AlunoCursoController.index);
-routes.post('/cursoAluno', AlunoCursoController.create);
+routes.post('/cursoAtribuir', AlunoCursoController.create);
+routes.post('/alunosCriar', AlunosController.create);
 
 export default routes;

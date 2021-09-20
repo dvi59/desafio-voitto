@@ -14,6 +14,7 @@ import {
 
 // services
 import { getKeyValue } from 'eslint-plugin-react/lib/util/ast';
+import * as assert from 'assert';
 import api from '../../services/api';
 
 // styles
@@ -22,11 +23,17 @@ import { Container, InitialText } from './styles';
 const Dashboard = () => {
   const [alunos, setAlunos] = useState([]);
   const [currentInfo, setCurrentInfo] = useState([]);
+  const [modalAlunos, setModalAlunos] = useState(false);
   const [modalInfos, setModalInfos] = useState(false);
   const [cursos, setCursos] = useState([]);
   const [modalCursos, setModalCursos] = useState(false);
-  const [alunoCurso, setAlunoCurso] = useState([]);
   const [currentCurso, setCurrentCurso] = useState([]);
+  const [newAlunos, setNewAlunos] = useState({});
+  const [cep,setCep] = useState("");
+  const [cepInfos,setCepInfos] = useState({});
+  const [modalDeleteAlunos, setModalDeleteAlunos] = useState(false);
+
+
 
   useEffect(() => {
     async function fetchData() {
@@ -42,11 +49,35 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
+  function createAluno() {
+    async function fetchData() {
+      try {
+        console.log(" newAlunos => ", newAlunos)
+        const response = await api.post('/alunosCriar', {
+          nome: newAlunos.nome,
+          email: newAlunos.email,
+          cep: newAlunos.cep,
+          cidade: cepInfos.localidade,
+          estado: cepInfos.uf,
+        });
+        console.log('Response>>>', response);
+        if (response.data) {
+          alert('Aluno cadastrado com sucesso');
+        } else {
+          alert('Não foi possível cadastrar o aluno');
+        }
+      } catch {
+        alert('Não foi possível cadastrar o aluno');
+      }
+    }
+    fetchData();
+  }
+
   function setCursoAluno(idAluno) {
     async function fetchData() {
       try {
         console.log('currentCurso >>>> ', currentCurso);
-        const response = await api.post('/cursoAluno', {
+        const response = await api.post('/cursoAtribuir', {
           id_aluno: idAluno,
           id_curso: currentCurso,
         });
@@ -69,7 +100,7 @@ const Dashboard = () => {
       <Modal.Content>
         <Form>
           <Form.Group widths="equal">
-            <Form.Input fluid label="Nome" placeholder="Nome" />
+            <Form.Input fluid label="Nome" placeholder="Nome"/>
             <Form.Input fluid label="Email" placeholder="Email" />
             <Form.Input fluid label="CEP" placeholder="CEP" />
           </Form.Group>
@@ -86,6 +117,53 @@ const Dashboard = () => {
     </Modal>
   );
 
+  const viacep = new ViaCep({
+    type: 'json'
+  })
+  async function pCep(cepx) {
+    console.log("cep >>>> ", cepx);
+    await viacep.zipCod.getZip(cepx).then(data => data.text())
+      .then(data => {
+        const cepInfos = JSON.parse(data);
+        setCepInfos(cepInfos)
+        console.log("cepInfos cidade >>>> ", cepInfos);
+      });
+
+  }
+
+  function atribuirCep(cepx){
+    setCep(cepx);
+    console.log("cep => ", cep);
+    console.log("cepx => ", cepx);
+    if(cepx.length == 8){
+      pCep(cepx);
+      newAlunos.cep = cepx;
+    }
+  }
+
+  const render_modal_add_alunos = () => (
+    <Modal open={modalAlunos} onClose={() => setModalAlunos(false)} closeIcon>
+      <Header content={`Cadastrando um novo aluno`} />
+      <Modal.Content>
+        <Form>
+          <Form.Group widths="equal">
+            <Form.Input fluid label="Nome" placeholder="Nome"  onChange={e =>newAlunos.nome=e.target.value}/>
+            <Form.Input fluid label="Email" placeholder="Email" onChange={e =>newAlunos.email=e.target.value}/>
+            <Form.Input fluid label="CEP" placeholder="CEP" value={cep}  onChange={e => atribuirCep(e.target.value)}/>
+          </Form.Group>
+        </Form>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button onClick={() => setModalAlunos(false)} color="red">
+          <Icon name="remove" />
+        </Button>
+        <Button onClick={() => atribuirAlu(newAlunos)} color="green">
+          <Icon name="checkmark" />
+        </Button>
+      </Modal.Actions>
+    </Modal>
+  );
+
   const curso_option = cursos.map(x => ({
     key: x.id,
     value: x.id,
@@ -96,8 +174,40 @@ const Dashboard = () => {
     console.log(' curso >>>>', curso);
     setCurrentCurso(curso);
   }
+  function atribuirAlu(aluno){
+    console.log('aluno', aluno)
+    //setNewAlunos(aluno);
+    createAluno(aluno);
+  }
 
   const render_modal_info_cursos = () => (
+    <Modal open={modalCursos} onClose={() => setModalCursos(false)} closeIcon>
+      <Header content={`Adcionando curso para : ${currentInfo.nome}`} />
+      <Modal.Content>
+        <Form>
+          <Form.Group widths="equal">
+            <Form.Select
+              fluid
+              label="Curso"
+              placeholder="Curso"
+              options={curso_option}
+              value={currentCurso}
+              onChange={(e, { value }) => setCurso(value)}
+            />
+          </Form.Group>
+        </Form>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button onClick={() => setModalCursos(false)} color="red">
+          <Icon name="remove" />
+        </Button>
+        <Button onClick={() => setCursoAluno(currentInfo.id)} color="green">
+          <Icon name="checkmark" />
+        </Button>
+      </Modal.Actions>
+    </Modal>
+  );
+  const render_modal_remove_alunos = () => (
     <Modal open={modalCursos} onClose={() => setModalCursos(false)} closeIcon>
       <Header content={`Adcionando curso para : ${currentInfo.nome}`} />
       <Modal.Content>
@@ -176,20 +286,6 @@ const Dashboard = () => {
       </Table.Row>
     ));
   }
-  /* function render_cursos() {
-    return cursos.map(x => (
-      <Form>
-        <Form.Group widths="equal">
-          <Form.Select
-            fluid
-            label="Curso"
-            placeholder="Curso"
-            options={x.nome}
-          />
-        </Form.Group>
-      </Form>
-    ));
-  } */
   return (
     <Container>
       <InitialText>Administrador de alunos</InitialText>
@@ -213,7 +309,8 @@ const Dashboard = () => {
       </Table>
       {render_modal_info_alunos()}
       {render_modal_info_cursos()}
-      <Button primary>Adicionar aluno</Button>
+      {render_modal_add_alunos()}
+      <Button primary onClick={() => setModalAlunos(true)}>Adicionar aluno</Button>
       <Button href="/" secondary>
         Ver instruções
       </Button>
